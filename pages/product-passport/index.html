@@ -1,0 +1,2131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/secrets-showcase/hosting-adapter.js"></script><script src="/secrets-showcase/local-runtime.js"></script><link rel="stylesheet" href="/secrets-showcase/local.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Passport — Secrets Of The Tribe</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --green: #4A7C2E;
+    --green-dark: #3A6322;
+    --green-light: #5E9E3A;
+    --green-pale: #EAF2E3;
+    --green-muted: #7BA65E;
+    --sage: #8DB56E;
+    --cream: #FAFAF7;
+    --cream-dark: #F2F0EB;
+    --gold: #B8963E;
+    --gold-light: #D4B96A;
+    --warm-brown: #5C4033;
+    --dark: #2C2C2C;
+    --text: #3A3A3A;
+    --text-light: #777777;
+    --pass-green: #2E7D32;
+    --pass-bg: #EAF5EB;
+    --border: #E5E2DC;
+    --white: #FFFFFF;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.09);
+    --radius: 14px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SEARCH SCREEN ───────────────────────────────── */
+  .search-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--white);
+    position: relative;
+  }
+
+  .search-screen::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .search-content { position: relative; z-index: 1; max-width: 540px; width: 100%; }
+
+  .brand-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .brand-logo {
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 12px;
+  }
+
+  .beta-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    vertical-align: middle;
+    margin-left: 10px;
+    position: relative;
+    top: -4px;
+    cursor: help;
+  }
+
+  .beta-wrapper {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  .beta-asterisk {
+    color: var(--gold);
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 2px;
+    vertical-align: super;
+    cursor: help;
+  }
+
+  .beta-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    width: 260px;
+    line-height: 1.5;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .beta-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--green);
+  }
+
+  .beta-wrapper:hover .beta-tooltip,
+  .beta-badge:hover + .beta-asterisk + .beta-tooltip,
+  .beta-asterisk:hover + .beta-tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .brand-tree {
+    width: 48px; height: 48px;
+    margin-bottom: 16px;
+    color: var(--green);
+  }
+
+  .brand-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .brand-tagline {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  /* ── HOME BUTTON ──────────────────────────────────── */
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.15s;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    padding: 8px 16px;
+    border-radius: 8px;
+  }
+
+  .home-btn:hover { color: var(--green-dark); background: var(--green-pale); transform: translateY(-1px); }
+
+  .home-bar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+
+  .passport-home-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    margin-bottom: 8px;
+  }
+
+  .search-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 5.5vw, 44px);
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .search-subtitle {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 36px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .search-box {
+    background: var(--white);
+    border-radius: 60px;
+    padding: 6px;
+    display: flex;
+    border: 2px solid var(--border);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .search-box:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 4px rgba(74,124,46,0.1);
+  }
+
+  .search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 22px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: transparent;
+    letter-spacing: 0.3px;
+  }
+
+  .search-box input::placeholder { color: #bbb; }
+
+  .search-btn {
+    background: var(--green);
+    color: var(--white);
+    border: none;
+    border-radius: 60px;
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+
+  .search-btn:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,124,46,0.3); }
+
+  .search-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .search-field-row {
+    background: var(--white);
+    border-radius: 60px;
+    padding: 6px;
+    display: flex;
+    border: 2px solid var(--border);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .search-field-row:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 4px rgba(74,124,46,0.1);
+  }
+
+  .search-field-row input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 22px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: transparent;
+    letter-spacing: 0.3px;
+  }
+
+  .search-field-row input::placeholder { color: #bbb; }
+
+  .search-field-row .field-icon {
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    color: var(--text-light);
+    font-size: 16px;
+  }
+
+  .slider-captcha {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 46px;
+    background: var(--cream, #f5f0ea);
+    border-radius: 60px;
+    margin: 4px auto 6px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+  }
+
+  .slider-track-label {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .slider-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 0;
+    background: rgba(74,124,46,0.1);
+    border-radius: 60px 0 0 60px;
+    transition: none;
+    pointer-events: none;
+  }
+
+  .slider-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 38px;
+    height: 38px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 18px;
+    cursor: grab;
+    transition: box-shadow 0.2s;
+    z-index: 2;
+  }
+
+  .slider-thumb:active { cursor: grabbing; }
+  .slider-thumb:hover { box-shadow: 0 2px 8px rgba(74,124,46,0.3); }
+
+  .slider-captcha.verified {
+    border-color: var(--green);
+    background: rgba(74,124,46,0.08);
+  }
+
+  .slider-captcha.verified .slider-track-label {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .slider-captcha.verified .slider-thumb {
+    background: var(--green);
+    cursor: default;
+  }
+
+  .slider-captcha.verified .slider-fill {
+    background: rgba(74,124,46,0.12);
+  }
+
+  .captcha-error {
+    color: var(--red, #c0392b);
+    font-size: 12px;
+    margin-top: -4px;
+    margin-bottom: 4px;
+    display: none;
+    text-align: center;
+  }
+
+  .email-note {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: -4px;
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  .marketing-opt-in {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 2px;
+    padding: 0 4px;
+    cursor: pointer;
+  }
+
+  .marketing-opt-in input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    accent-color: var(--green);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .marketing-opt-in label {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  .terms-opt-in {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 2px;
+    padding: 0 4px;
+    cursor: pointer;
+  }
+
+  .terms-opt-in input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    accent-color: var(--green);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .terms-opt-in label {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  .terms-opt-in label a {
+    color: var(--gold);
+    text-decoration: underline;
+  }
+
+  .terms-error {
+    color: var(--red, #c0392b);
+    font-size: 12px;
+    text-align: center;
+    display: none;
+    margin-top: -2px;
+  }
+
+  .search-hint {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .search-hint span { color: var(--dark); font-weight: 500; }
+
+  /* ── BATCH DISAMBIGUATION SCREEN ──────────────── */
+  .disambig-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--white);
+    position: relative;
+  }
+
+  .disambig-screen::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .disambig-content {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    width: 100%;
+  }
+
+  .disambig-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .disambig-subtitle {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .disambig-lot-badge {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-dark);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  .disambig-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .disambig-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .disambig-option:hover {
+    border-color: var(--green);
+    box-shadow: 0 0 0 4px rgba(74,124,46,0.1);
+    transform: translateY(-1px);
+  }
+
+  .disambig-option-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .disambig-option-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  .disambig-option-exp {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .disambig-option-arrow {
+    color: var(--green);
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .disambig-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .disambig-back:hover {
+    color: var(--green-dark);
+    background: var(--green-pale);
+  }
+
+  /* ─── Product search results (search by product name) ─────────────── */
+
+  .product-group {
+    margin-bottom: 28px;
+    text-align: left;
+  }
+
+  .product-group-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .product-group-count {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+
+  .product-lot-code {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: 0.5px;
+  }
+
+  .product-latest-tag {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-dark);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 100px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .product-more {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 12px;
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--green);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .product-more:hover {
+    border-color: var(--green);
+    background: var(--green-pale);
+  }
+
+  .search-error {
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: #FFF5F5;
+    border: 1px solid #FED7D7;
+    border-radius: 10px;
+    color: #C53030;
+    font-size: 14px;
+    display: none;
+  }
+
+  .search-loading {
+    display: none;
+    margin-top: 24px;
+    color: var(--text-light);
+    font-size: 14px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── PASSPORT CONTAINER ───────────────────────────── */
+  .passport-wrapper {
+    display: none;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* ── BACK BUTTON ──────────────────────────────────── */
+  .back-bar {
+    padding: 16px 0;
+    margin-bottom: 8px;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .back-btn:hover { color: var(--green-dark); }
+
+  /* ── HERO CARD ────────────────────────────────────── */
+  .hero-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: clamp(28px, 5vw, 44px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 16px;
+  }
+
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--green) 0%, var(--sage) 50%, var(--gold) 100%);
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  /* USDA Organic Badge — inline next to passport badge */
+  .organic-badge {
+    display: none;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+  .organic-badge.show { display: block; }
+  .organic-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  .hero-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) {
+    .organic-badge { width: 48px; height: 48px; }
+  }
+
+  .passport-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-pale);
+    border: 1px solid rgba(74,124,46,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  .passport-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+
+  .hero-product {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: var(--dark);
+  }
+
+  .hero-latin {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green-muted);
+  }
+
+  .meta-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+  }
+
+  .lot-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--dark);
+  }
+
+  .lot-tag svg { opacity: 0.5; color: var(--green); }
+
+  /* ── SECTION CARDS ────────────────────────────────── */
+  .section-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: clamp(24px, 4vw, 36px);
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    animation: fadeUp 0.5s ease-out both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-card:nth-child(2) { animation-delay: 0.1s; }
+  .section-card:nth-child(3) { animation-delay: 0.2s; }
+  .section-card:nth-child(4) { animation-delay: 0.3s; }
+  .section-card:nth-child(5) { animation-delay: 0.35s; }
+  .section-card:nth-child(6) { animation-delay: 0.4s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-icon {
+    width: 40px; height: 40px;
+    background: var(--green-pale);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-icon svg { width: 20px; height: 20px; color: var(--green); }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  /* ── FORMULATOR QUOTE (standalone card) ────────────── */
+  .formulator-card {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 28px 28px 24px;
+    position: relative;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .formulator-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: var(--green);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    color: var(--green);
+    line-height: 1;
+    position: absolute;
+    top: 8px; left: 22px;
+    opacity: 0.18;
+  }
+
+  .formulator-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--warm-brown);
+    padding-left: 12px;
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .formulator-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 12px;
+  }
+
+  .formulator-avatar {
+    width: 42px; height: 42px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .formulator-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark);
+  }
+
+  .formulator-title-text {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* ── ORIGIN GRID (redesigned) ──────────────────────── */
+  .origin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .origin-item {
+    padding: 20px 22px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .origin-item:nth-child(even) { border-right: none; }
+  .origin-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .origin-item::before {
+    content: '';
+    position: absolute;
+    top: 18px; left: 0;
+    width: 3px; height: 20px;
+    background: var(--green);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .origin-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green-muted);
+    margin-bottom: 6px;
+  }
+
+  .origin-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.55;
+  }
+
+  /* ── QA CHECKLIST ──────────────────────────────────── */
+  .qa-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .qa-check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .qa-check-item:last-child { border-bottom: none; }
+  .qa-check-item:hover { background: var(--cream); }
+
+  .qa-checkbox {
+    width: 24px; height: 24px;
+    background: var(--pass-green);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .qa-checkbox svg { width: 14px; height: 14px; color: var(--white); }
+
+  .qa-check-info { flex: 1; }
+
+  .qa-check-title {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+
+  .qa-check-desc {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  .qa-check-status {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pass-green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  /* ── QA MANAGER SIGN-OFF ───────────────────────────── */
+  .signoff-card {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 28px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .signoff-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--green-light), var(--gold));
+  }
+
+  .signoff-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .signoff-icon {
+    width: 40px; height: 40px;
+    background: var(--green-pale);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .signoff-icon svg { width: 20px; height: 20px; color: var(--green); }
+
+  .signoff-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  .signoff-body {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .signoff-avatar {
+    width: 52px; height: 52px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 3px solid var(--green-pale);
+  }
+
+  .signoff-details { flex: 1; }
+
+  .signoff-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+
+  .signoff-title {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+
+  .signoff-date-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .signoff-date-row svg { width: 14px; height: 14px; opacity: 0.6; }
+
+  .signoff-stamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 16px;
+    border: 2px solid var(--pass-green);
+    border-radius: 10px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .signoff-stamp svg { width: 28px; height: 28px; color: var(--pass-green); }
+
+  .signoff-stamp-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--pass-green);
+  }
+
+  /* ── TEST RESULTS ─────────────────────────────────── */
+  .overall-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--green);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+
+  .overall-badge svg { flex-shrink: 0; }
+
+  .test-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .test-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--pass-bg);
+    border-radius: var(--radius-sm);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .test-row:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .test-check {
+    width: 30px; height: 30px;
+    background: var(--pass-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .test-check svg { width: 14px; height: 14px; color: var(--white); }
+
+  .test-check.verified {
+    background: var(--green);
+  }
+
+  .test-info { flex: 1; min-width: 0; }
+
+  .test-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark);
+    margin-bottom: 1px;
+  }
+
+  .test-detail {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.4;
+  }
+
+  .test-badge {
+    background: var(--pass-green);
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .test-badge.verified-badge {
+    background: var(--green);
+  }
+
+  /* ── TRUST ELEMENTS ─────────────────────────────── */
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    transition: transform 0.15s;
+  }
+
+  .trust-item:hover { transform: translateY(-2px); }
+
+  .trust-icon {
+    width: 36px; height: 36px;
+    background: var(--green-pale);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .trust-icon svg { width: 18px; height: 18px; color: var(--green); }
+
+  .trust-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark);
+    margin-bottom: 3px;
+  }
+
+  .trust-desc {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.45;
+  }
+
+  /* ── COA TABLE ────────────────────────────────────── */
+  .coa-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    text-align: left;
+  }
+
+  .coa-toggle:hover { background: var(--cream-dark); }
+
+  .coa-toggle-text {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--dark);
+  }
+
+  .coa-toggle-sub {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  .coa-chevron {
+    transition: transform 0.3s;
+    color: var(--green);
+  }
+
+  .coa-chevron.open { transform: rotate(180deg); }
+
+  .coa-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+  }
+
+  .coa-content.open { max-height: 3000px; }
+
+  .coa-section-title {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--green);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    margin-top: 16px;
+  }
+
+  .coa-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .coa-table th {
+    background: var(--cream);
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    color: var(--dark);
+    border-bottom: 2px solid var(--border);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .coa-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    color: var(--text);
+  }
+
+  .coa-table tr:last-child td { border-bottom: none; }
+
+  .coa-table .status-pass { color: var(--pass-green); font-weight: 700; }
+  .coa-table .status-info { color: var(--text-light); }
+  .coa-table .status-verified { color: var(--green); font-weight: 600; }
+  .coa-table .status-fail { color: #C53030; font-weight: 700; }
+
+  /* Prop 65 Warning Banner */
+  .prop65-warning {
+    background: #FFF8E1;
+    border: 1px solid #F9A825;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .prop65-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: #F9A825;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    color: #000;
+  }
+  .prop65-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #5D4037;
+  }
+  .prop65-text strong {
+    font-size: 13px;
+    color: #E65100;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ── CERTIFICATIONS ───────────────────────────────── */
+  .cert-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .cert-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+  }
+
+  .cert-item svg { width: 14px; height: 14px; color: var(--gold); }
+
+  /* ── LAB FOOTER ───────────────────────────────────── */
+  .lab-footer {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    font-size: 13px;
+    border: 1px solid var(--border);
+  }
+
+  .lab-footer-label { font-weight: 600; color: var(--dark); }
+  .lab-footer-value { color: var(--text-light); }
+
+  /* ── SITE FOOTER ──────────────────────────────────── */
+  .passport-footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.8;
+  }
+
+  .passport-footer a { color: var(--green); text-decoration: none; }
+  .passport-footer a:hover { text-decoration: underline; }
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 600px) {
+    .hero-meta { gap: 14px; }
+    .meta-item { min-width: 120px; }
+    .test-detail { white-space: normal; }
+    .origin-grid { grid-template-columns: 1fr; }
+    .origin-item { border-right: none !important; }
+    .origin-item:nth-last-child(2) { border-bottom: 1px solid var(--border); }
+    .trust-grid { grid-template-columns: 1fr; }
+    .lab-footer { flex-direction: column; gap: 12px; }
+    .search-box { flex-direction: column; }
+    .search-field-row { border-radius: 14px; }
+    .search-btn { border-radius: 10px; }
+    .slider-captcha { max-width: 100%; }
+    .coa-table { font-size: 12px; }
+    .coa-table th, .coa-table td { padding: 8px 10px; }
+    .signoff-body { flex-direction: column; text-align: center; }
+    .signoff-details { text-align: center; }
+    .signoff-date-row { justify-content: center; }
+  }
+
+  /* ── BLEND INGREDIENTS ─────────────────────────────── */
+  .blend-section { display: none; }
+  .blend-section.active { display: block; }
+
+  .blend-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .blend-herb {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    border-left: 3px solid var(--green);
+    transition: transform 0.15s;
+  }
+
+  .blend-herb:hover { transform: translateX(3px); }
+
+  .blend-herb-num {
+    width: 28px; height: 28px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+
+  .blend-herb-info { flex: 1; min-width: 0; }
+
+  .blend-herb-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+
+  .blend-herb-latin {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 1px;
+  }
+
+  .blend-herb-part {
+    font-size: 11px;
+    color: var(--green-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .blend-herb-origin {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .blend-origin-flag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--dark);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 12px;
+    white-space: nowrap;
+  }
+
+  .blend-count {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 12px;
+    text-align: center;
+    font-style: italic;
+  }
+
+</style>
+<!-- BEGIN app block: shopify://apps/vitals/blocks/app-embed/aeb48102-2a5a-4f39-bdbd-d8d49f4e20b8 --><link rel="preconnect" href="https://appsolve.io/" /><link rel="preconnect" href="https://cdn-sf.vitals.app/" />
+
+<!-- END app block --><!-- BEGIN app block: shopify://apps/seowill-ai-seo/blocks/seoant-core/8e57283b-dcb0-4f7b-a947-fb5c57a0d59d --><!--SEOAnt Core By SEOAnt Teams, v0.1.6 START -->
+<!-- BEGIN app snippet: Page-JSON-LD-V2 --><script type="application/ld+json" data-seoant="1" data-seoant-version="v2">
+{
+"@context": "https://schema.org",
+"@graph": [{
+"@type": "Organization",
+"@id": "https:\/\/secrets.shop\/#organization",
+"name": "Secrets Of The Tribe",
+"url": "https:\/\/secrets.shop"
+,
+"logo": {
+"@type": "ImageObject",
+"url": "/secrets-showcase/_assets/2e26047eb4b0fa0b9bb5bd49.png",
+"width": 512,
+"height": 512
+},
+"sameAs": ["https://www.youtube.com/@secretsofthetribe","https://www.facebook.com/secretsofthetribe1","","https://x.com/SecretsHerbs","https://www.linkedin.com/company/secrets-of-the-tribe/","https://www.instagram.com/secretsofthetribe","https://www.pinterest.com/secretsofthetribe","https://www.tiktok.com/@secretsofthetribe1"]
+},{
+"@type": "BreadcrumbList",
+"@id": "https:\/\/secrets.shop\/pages\/product-passport#breadcrumb",
+"itemListElement": [
+{
+"@type": "ListItem",
+"position": 1,
+"name": "Home",
+"item": "https:\/\/secrets.shop"
+},
+{
+"@type": "ListItem",
+"position": 2,
+"name": "Product Passport",
+"item": "https:\/\/secrets.shop\/pages\/product-passport"
+}
+]
+},{
+"@type": "WebPage",
+"@id": "https:\/\/secrets.shop\/pages\/product-passport#webpage",
+"url": "https:\/\/secrets.shop\/pages\/product-passport",
+"name": "Product Passport"
+,
+"breadcrumb": { "@id": "https:\/\/secrets.shop\/pages\/product-passport#breadcrumb" },
+"publisher": { "@id": "https:\/\/secrets.shop\/#organization" }}
+]
+}
+</script><!-- END app snippet -->
+<!-- JsSON-LD generated By SEOAnt END -->
+<!-- Start : SEOAnt BrokenLink Redirect --><!-- END : SEOAnt BrokenLink Redirect -->
+<!-- Added By SEOAnt AMP. v0.0.1, START --><!-- Added By SEOAnt AMP END -->
+<!-- Instant Page START --><!-- Instant Page END -->
+<!-- Google search console START v1.0 -->
+<!-- Google search console END v1.0 -->
+<!-- Lazy Loading START --><!-- Lazy Loading END -->
+<!-- Video Lazy START --><!-- Video Lazy END -->
+<!--  SEOAnt Core End -->
+<!-- END app block --><!-- BEGIN app block: shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8 --><!-- Start of Judge.me Core -->
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="https://cdn.judge.me">
+<link rel="dns-prefetch" href="https://cdn1.judge.me">
+<link rel="dns-prefetch" href="https://api.judge.me">
+
+
+ <style class='jdgm-settings-style'>.jdgm-xx{left:0}:root{--jdgm-primary-color: #8BA462;--jdgm-secondary-color: rgba(139,164,98,0.1);--jdgm-star-color: #ffa800;--jdgm-write-review-text-color: white;--jdgm-write-review-bg-color: #587352;--jdgm-paginate-color: #587352;--jdgm-border-radius: 10;--jdgm-reviewer-name-color: #8BA462}.jdgm-histogram__bar-content{background-color:#587352}.jdgm-rev[data-verified-buyer=true] .jdgm-rev__icon.jdgm-rev__icon:after,.jdgm-rev__buyer-badge.jdgm-rev__buyer-badge{color:white;background-color:#8BA462}.jdgm-review-widget--small .jdgm-gallery.jdgm-gallery .jdgm-gallery__thumbnail-link:nth-child(8) .jdgm-gallery__thumbnail-wrapper.jdgm-gallery__thumbnail-wrapper:before{content:"See more"}@media only screen and (min-width: 768px){.jdgm-gallery.jdgm-gallery .jdgm-gallery__thumbnail-link:nth-child(8) .jdgm-gallery__thumbnail-wrapper.jdgm-gallery__thumbnail-wrapper:before{content:"See more"}}.jdgm-rev__thumb-btn{color:#8BA462}.jdgm-rev__thumb-btn:hover{opacity:0.8}.jdgm-rev__thumb-btn:not([disabled]):hover,.jdgm-rev__thumb-btn:hover,.jdgm-rev__thumb-btn:active,.jdgm-rev__thumb-btn:visited{color:#8BA462}.jdgm-preview-badge .jdgm-star.jdgm-star{color:#ffa800}.jdgm-prev-badge[data-average-rating='0.00']{display:none !important}.jdgm-rev .jdgm-rev__icon{display:none !important}.jdgm-widget.jdgm-all-reviews-widget,.jdgm-widget .jdgm-rev-widg{border:none;padding:0}.jdgm-author-all-initials{display:none !important}.jdgm-author-last-initial{display:none !important}.jdgm-rev-widg__title{visibility:hidden}.jdgm-rev-widg__summary-text{visibility:hidden}.jdgm-prev-badge__text{visibility:hidden}.jdgm-rev__prod-link-prefix:before{content:'about'}.jdgm-rev__variant-label:before{content:'Variant: '}.jdgm-rev__out-of-store-text:before{content:'(out of store)'}@media only screen and (min-width: 768px){.jdgm-rev__pics .jdgm-rev_all-rev-page-picture-separator,.jdgm-rev__pics .jdgm-rev__product-picture{display:none}}@media only screen and (max-width: 768px){.jdgm-rev__pics .jdgm-rev_all-rev-page-picture-separator,.jdgm-rev__pics .jdgm-rev__product-picture{display:none}}.jdgm-preview-badge[data-template="index"]{display:none !important}.jdgm-verified-count-badget[data-from-snippet="true"]{display:none !important}.jdgm-carousel-wrapper[data-from-snippet="true"]{display:none !important}.jdgm-all-reviews-text[data-from-snippet="true"]{display:none !important}.jdgm-medals-section[data-from-snippet="true"]{display:none !important}.jdgm-ugc-media-wrapper[data-from-snippet="true"]{display:none !important}.jdgm-rev__transparency-badge[data-badge-type="review_collected_via_store_invitation"]{display:none !important}.jdgm-rev__transparency-badge[data-badge-type="review_collected_from_another_provider"]{display:none !important}.jdgm-rev__transparency-badge[data-badge-type="review_collected_from_store_visitor"]{display:none !important}.jdgm-rev__transparency-badge[data-badge-type="review_earned_for_future_purchase"]{display:none !important}.jdgm-review-snippet-widget{--jdgm-snippet-card-color: #fff;--jdgm-snippet-text-color: #000;--jdgm-snippet-lighter-text-color: #7B7B7B;--jdgm-snippet-star-color: #8BA462;--jdgm-snippet-border-radius: 8px;--jdgm-snippet-arrows-bg-color: #fff;--jdgm-snippet-arrows-color: #000}.jdgm-review-snippet-widget .jdgm-rev-snippet-widget__cards-container .jdgm-rev-snippet-card{border-radius:8px;background:#fff}.jdgm-review-snippet-widget .jdgm-rev-snippet-widget__cards-container .jdgm-rev-snippet-card__rev-rating .jdgm-star{color:#8BA462}.jdgm-review-snippet-widget .jdgm-rev-snippet-widget__prev-btn,.jdgm-review-snippet-widget .jdgm-rev-snippet-widget__next-btn{border-radius:50%;background:#fff}.jdgm-review-snippet-widget .jdgm-rev-snippet-widget__prev-btn>svg,.jdgm-review-snippet-widget .jdgm-rev-snippet-widget__next-btn>svg{fill:#000}.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jm-mfp-content,.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev__icon,.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev__pic-img,.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev__reply{border-radius:8px}.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev[data-verified-buyer="true"] .jdgm-full-rev__icon::after{border-radius:8px}.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev .jdgm-rev__buyer-badge{border-radius:calc( 8px / 2 )}.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev .jdgm-full-rev__replier::before{content:'Secrets Of The Tribe'}.jdgm-full-rev-modal.rev-snippet-widget .jm-mfp-container .jdgm-full-rev .jdgm-full-rev__product-button{border-radius:calc( 8px * 6 )}
+</style> <style class='jdgm-settings-style'></style>
+
+  
+  
+  
+  <style class='jdgm-miracle-styles'>
+  @-webkit-keyframes jdgm-spin{0%{-webkit-transform:rotate(0deg);-ms-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);transform:rotate(359deg)}}@keyframes jdgm-spin{0%{-webkit-transform:rotate(0deg);-ms-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);transform:rotate(359deg)}}@font-face{font-family:'JudgemeStar';src:url("data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAScAA0AAAAABrAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAAEgAAAABoAAAAcbyQ+3kdERUYAAARgAAAAHgAAACAAMwAGT1MvMgAAAZgAAABGAAAAVi+vS9xjbWFwAAAB8AAAAEAAAAFKwBMjvmdhc3AAAARYAAAACAAAAAj//wADZ2x5ZgAAAkAAAAEJAAABdH33LXtoZWFkAAABMAAAAC0AAAA2BroQKWhoZWEAAAFgAAAAHAAAACQD5QHQaG10eAAAAeAAAAAPAAAAFAYAAABsb2NhAAACMAAAAA4AAAAOAO4AeG1heHAAAAF8AAAAHAAAACAASgAvbmFtZQAAA0wAAADeAAABkorWfVZwb3N0AAAELAAAACkAAABEp3ubLXgBY2BkYADhPPP4OfH8Nl8ZuJkYQODS2fRrCPr/aSYGxq1ALgcDWBoAO60LkwAAAHgBY2BkYGDc+v80gx4TAwgASaAICmABAFB+Arl4AWNgZGBgYGPQYWBiAAIwyQgWc2AAAwAHVQB6eAFjYGRiYJzAwMrAwejDmMbAwOAOpb8ySDK0MDAwMbByMsCBAAMCBKS5pjA4PGB4wMR44P8BBj3GrQymQGFGkBwAjtgK/gAAeAFjYoAAEA1jAwAAZAAHAHgB3crBCcAwDEPRZydkih567CDdf4ZskmLwFBV8xBfCaC4BXkOUmx4sU0h2ngNb9V0vQCxaRKIAevT7fGWuBrEAAAAAAAAAAAA0AHgAugAAeAF9z79Kw1AUx/FzTm7un6QmJtwmQ5Bg1abgEGr/BAqlU6Gju+Cgg1MkQ/sA7Vj7BOnmO/gUvo2Lo14NqIO6/IazfD8HEODtmQCfoANwNsyp2/GJt3WKQrd1NLiYYWx2PBqOsmJMEOznPOTzfSCrhAtbbLdmeFLJV9eKd63WLrZcIcuaEVdssWCKM6pLCfTVOYbz/0pNSMSZKLIZpvh78sAUH6PlMrreTCabP9r+Z/puPZ2ur/RqpQHgh+MIegCnXeM4MRAPjYN//5tj4ZtTjkFqEdmeMShlEJ7tVAly2TAkx6R68Fl4E/aVvn8JqHFQ4JS1434gXKcuL31dDhzs3YbsEOAd/IU88gAAAHgBfY4xTgMxEEVfkk0AgRCioKFxQYd2ZRtpixxgRU2RfhU5q5VWseQ4JdfgAJyBlmNwAM7ABRhZQ0ORwp7nr+eZAa54YwYg9zm3ynPOeFRe8MCrciXOh/KSS76UV5L/iDmrLiS5AeU519wrL3jmSbkS5115yR2fyivJv9kx0ZMZ2RLZw27q87iNQi8EBo5FSPIMw3HqBboi5lKTGAGDp8FKXWP+t9TU01Lj5His1Ba6uM9dTEMwvrFmbf5GC/q2drW3ruXUhhsCiQOjznFlCzYhHUZp4xp76vsvQh89CQAAeAFjYGJABowM6IANLMrEyMTIzMjCXpyRWJBqZshWXJJYBKOMAFHFBucAAAAAAAAB//8AAngBY2BkYGDgA2IJBhBgAvKZGViBJAuYxwAABJsAOgAAeAFjYGBgZACCk535hiD60tn0azAaAEqpB6wAAA==") format("woff");font-weight:normal;font-style:normal}.jdgm-star{font-family:'JudgemeStar';display:inline !important;text-decoration:none !important;padding:0 4px 0 0 !important;margin:0 !important;font-weight:bold;opacity:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.jdgm-star:hover{opacity:1}.jdgm-star:last-of-type{padding:0 !important}.jdgm-star.jdgm--on:before{content:"\e000"}.jdgm-star.jdgm--off:before{content:"\e001"}.jdgm-star.jdgm--half:before{content:"\e002"}.jdgm-widget *{margin:0;line-height:1.4;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-webkit-overflow-scrolling:touch}.jdgm-hidden{display:none !important;visibility:hidden !important}.jdgm-temp-hidden{display:none}.jdgm-spinner{width:40px;height:40px;margin:auto;border-radius:50%;border-top:2px solid #eee;border-right:2px solid #eee;border-bottom:2px solid #eee;border-left:2px solid #ccc;-webkit-animation:jdgm-spin 0.8s infinite linear;animation:jdgm-spin 0.8s infinite linear}.jdgm-spinner:empty{display:block}.jdgm-prev-badge{display:block !important}
+
+</style>
+
+
+  
+  
+   
+
+
+  
+    
+    
+    
+      <link id="judgeme_widget_align_css" rel="stylesheet" type="text/css" media="nope!" onload="this.media='all'" href="/secrets-showcase/_assets/c13b44cb55bf4f804d8a99e1.css">
+    
+  
+
+
+
+<noscript><link rel="stylesheet" type="text/css" media="all" href="/secrets-showcase/_assets/a2442e01f4a0fadd35b3b2b6.css"></noscript>
+
+<!-- BEGIN app snippet: theme_fix_tags -->
+
+<!-- END app snippet -->
+<!-- End of Judge.me Core -->
+
+
+
+<!-- END app block -->
+
+<link rel="canonical" href="/secrets-showcase/pages/product-passport">
+<meta property="og:image" content="/secrets-showcase/_assets/c00720d312d31f9a3e00f613.png" />
+<meta property="og:image:secure_url" content="/secrets-showcase/_assets/c00720d312d31f9a3e00f613.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="628" />
+<meta name="shopify-y" content="d7eaf81a-0619-4532-b220-80e83b9b120a" data-expiration="1823702878000"><meta name="shopify-s" content="f7fb053d-6b92-41be-9013-da2083130c36" data-expiration="1792147078000">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     SEARCH SCREEN
+     ═══════════════════════════════════════════════════ -->
+<div class="search-screen" id="searchScreen">
+  <!-- Home button on search page -->
+  <div class="home-bar">
+    <a href="" class="home-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+  </div>
+
+  <div class="search-content">
+    <div class="brand-mark">
+      <img class="brand-logo" src="https://secrets.shop/cdn/shop/files/SE_Logo_Horizontal_Full_8e2207fc-a0d2-448c-90cf-69b70b42e646.png?v=1767724367&amp;width=1080" alt="Secrets Of The Tribe — Herbal Traditions For Healthy Life">
+    </div>
+
+    <h1 class="search-title">Product Passport</h1> <span class="beta-wrapper"><span class="beta-badge">Beta</span><span class="beta-asterisk">*</span><span class="beta-tooltip">This Product Passport is currently in active development. Some information may be incomplete or subject to updates as we continue to enhance our quality transparency system.</span></span>
+    <p class="search-subtitle">Trace the quality and origin of your herbal product — from harvest to your hands.</p>
+
+    <div class="search-fields">
+      <div class="search-field-row">
+        <span class="field-icon">&#128270;</span>
+        <input type="text" id="lotInput" placeholder="Enter lot number or product name" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="search-field-row">
+        <span class="field-icon">&#9993;</span>
+        <input type="email" id="emailInput" placeholder="Enter your email address" autocomplete="email" spellcheck="false">
+      </div>
+      <p class="email-note">Your email is required to access the Product Passport and helps us keep you informed about product quality.</p>
+      <div class="terms-opt-in">
+        <input type="checkbox" id="termsAgree">
+        <label for="termsAgree">I agree to the <a href="/secrets-showcase/policies/privacy-policy" target="_blank">Privacy Policy</a> and <a href="/secrets-showcase/policies/terms-of-service" target="_blank">Terms of Service</a>. <span style="color:var(--red,#c0392b);">*</span></label>
+      </div>
+      <div class="terms-error" id="termsError">You must agree to the Privacy Policy and Terms of Service to continue.</div>
+      <div class="marketing-opt-in">
+        <input type="checkbox" id="marketingOptIn" checked>
+        <label for="marketingOptIn">Yes, I'd like to receive exclusive offers, wellness tips, and product updates from Secrets Of The Tribe.</label>
+      </div>
+      <div class="slider-captcha" id="sliderCaptcha">
+        <div class="slider-fill" id="sliderFill"></div>
+        <div class="slider-thumb" id="sliderThumb">&#10148;</div>
+        <div class="slider-track-label" id="sliderLabel">Slide to verify you're human</div>
+      </div>
+      <div class="captcha-error" id="captchaError">Please slide to verify you're human.</div>
+    </div>
+
+    <div class="search-box" style="border:none;padding:0;background:none;">
+      <button class="search-btn" onclick="lookupPassport()" style="width:100%;border-radius:14px;padding:16px 32px;">
+        Verify Product
+      </button>
+    </div>
+
+    <div class="search-error" id="searchError">
+      We couldn't find that lot number. Please double-check the lot number on your product label and try again. If the issue persists, our team is happy to help — reach out to us at <a href="mailto:support@secrets.shop" style="color:var(--gold);text-decoration:underline;">support@secrets.shop</a> or visit our <a href="/secrets-showcase/pages/contact-us" style="color:var(--gold);text-decoration:underline;">Contact Us</a> page. Our Product Passport is still being expanded, and not all lot numbers may be available yet.
+    </div>
+
+    <div class="search-loading" id="searchLoading">
+      <span class="spinner"></span> Looking up your product passport…
+    </div>
+
+    <p class="search-hint">Find the lot number on the bottom of your bottle (example: <span>HYA5677</span>) — or search by product name, such as <span>Ashwagandha</span>, to see every batch.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     BATCH DISAMBIGUATION SCREEN
+     ═══════════════════════════════════════════════════ -->
+<div class="disambig-screen" id="disambigScreen">
+  <div class="disambig-content">
+    <div class="brand-mark">
+      <img class="brand-logo" src="https://secrets.shop/cdn/shop/files/SE_Logo_Horizontal_Full_8e2207fc-a0d2-448c-90cf-69b70b42e646.png?v=1767724367&amp;width=1080" alt="Secrets Of The Tribe — Herbal Traditions For Healthy Life" style="max-width:200px;">
+    </div>
+
+    <h2 class="disambig-title">Multiple Batches Found</h2>
+    <p class="disambig-subtitle">We found several batches matching your lot number. Please select the one that matches the expiration date on your product label.</p>
+    <div class="disambig-lot-badge" id="disambigLotBadge"></div>
+
+    <div class="disambig-list" id="disambigList">
+      <!-- Populated dynamically -->
+    </div>
+
+    <button class="disambig-back" onclick="showSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Search a different lot
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PRODUCT RESULTS SCREEN — search by product name
+     ═══════════════════════════════════════════════════ -->
+<div class="disambig-screen" id="productScreen">
+  <div class="disambig-content">
+    <div class="brand-mark">
+      <img class="brand-logo" src="https://secrets.shop/cdn/shop/files/SE_Logo_Horizontal_Full_8e2207fc-a0d2-448c-90cf-69b70b42e646.png?v=1767724367&amp;width=1080" alt="Secrets Of The Tribe — Herbal Traditions For Healthy Life" style="max-width:200px;">
+    </div>
+
+    <h2 class="disambig-title" id="productTitle">Batches Found</h2>
+    <p class="disambig-subtitle" id="productSubtitle">Select the batch that matches the lot number on your product label. The most recent batch is listed first.</p>
+    <div class="disambig-lot-badge" id="productBadge"></div>
+
+    <div class="disambig-list" id="productList">
+      <!-- Populated dynamically -->
+    </div>
+
+    <button class="disambig-back" onclick="showSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Start a new search
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PASSPORT VIEW
+     ═══════════════════════════════════════════════════ -->
+<div class="passport-wrapper" id="passportView">
+
+  <!-- Navigation bar -->
+  <div class="passport-home-bar">
+    <a href="" class="home-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <button class="back-btn" onclick="showSearch()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Search another lot
+    </button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-card">
+    <div class="hero-content">
+      <div class="hero-top-row">
+        <div class="passport-badge">
+          <span class="dot"></span>
+          Product Passport
+        </div>
+        <div class="organic-badge" id="organicBadge">
+          <img src="https://cdn.shopify.com/s/files/1/0265/4558/6254/files/ORGANICLOGO.jpg?v=1773107318" alt="USDA Organic">
+        </div>
+      </div>
+      <h1 class="hero-product" id="pProductName"></h1>
+      <p class="hero-latin"><span id="pLatinName"></span> &middot; <span id="pHerbPart"></span></p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Origin</span>
+          <span class="meta-value" id="pOrigin"></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Manufactured</span>
+          <span class="meta-value" id="pMfgDate"></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Best By</span>
+          <span class="meta-value" id="pBestBy"></span>
+        </div>
+      </div>
+      <div class="lot-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M7 12h.01M7 17h.01M12 7h5M12 12h5M12 17h5"/></svg>
+        <span id="pLotNumber"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULATOR QUOTE (before Origin & Process) -->
+  <div class="section-card" id="formulatorSection">
+    <div class="formulator-card">
+      <span class="quote-mark">&ldquo;</span>
+      <p class="formulator-quote" id="pHerbalistNote"></p>
+      <div class="formulator-info">
+        <div class="formulator-avatar" id="pHerbalistInitials"></div>
+        <div>
+          <div class="formulator-name" id="pHerbalistName"></div>
+          <div class="formulator-title-text" id="pHerbalistTitle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORIGIN & PROCESS (redesigned) -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h2 class="section-title">Origin &amp; Process</h2>
+    </div>
+
+    <div class="origin-grid">
+      <div class="origin-item">
+        <div class="origin-label">Harvest Region</div>
+        <div class="origin-value" id="pRegion"></div>
+      </div>
+      <div class="origin-item">
+        <div class="origin-label">Plant Part</div>
+        <div class="origin-value" id="pPart2"></div>
+      </div>
+      <div class="origin-item">
+        <div class="origin-label" id="pExtractionLabel">Processing Method</div>
+        <div class="origin-value" id="pExtraction"></div>
+      </div>
+      <div class="origin-item">
+        <div class="origin-label">Produced At</div>
+        <div class="origin-value" id="pFacility"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- BLEND INGREDIENTS (shown only for proprietary blends) -->
+  <div class="section-card blend-section" id="blendSection">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h2 class="section-title">Blend Ingredients &amp; Origins</h2>
+    </div>
+
+    <div class="blend-grid" id="pBlendGrid">
+      <!-- Populated by JS -->
+    </div>
+    <div class="blend-count" id="pBlendCount"></div>
+  </div>
+
+    <!-- TEST RESULTS -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <h2 class="section-title">Quality Verification Results</h2>
+    </div>
+
+    <div class="overall-badge" id="pOverallBadge">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      ALL TESTS PASSED
+    </div>
+
+    <div class="test-list" id="pTestList">
+      <!-- Populated by JS -->
+    </div>
+
+    <div class="lab-footer">
+      <div>
+        <div class="lab-footer-label">Tested by</div>
+        <div class="lab-footer-value" id="pLabName"></div>
+      </div>
+      <div>
+        <div class="lab-footer-label">Report</div>
+        <div class="lab-footer-value"><span id="pLabReport"></span> &middot; <span id="pLabDate"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUALITY ASSURANCE PROTOCOLS (checklist) -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <h2 class="section-title">Quality Assurance Protocols</h2>
+    </div>
+
+    <div class="qa-checklist" id="pTrustGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- FULL COA (EXPANDABLE) -->
+  <div class="section-card">
+    <button class="coa-toggle" onclick="toggleCOA()">
+      <div>
+        <div class="coa-toggle-text">Full Certificate of Analysis</div>
+        <div class="coa-toggle-sub">Detailed lab results for every test performed</div>
+      </div>
+      <svg class="coa-chevron" id="coaChevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="coa-content" id="coaContent">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- QA MANAGER BATCH SIGN-OFF -->
+  <div class="section-card" id="signoffSection">
+    <div class="signoff-card">
+      <div class="signoff-header">
+        <div class="signoff-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>
+        </div>
+        <div class="signoff-label">QA Manager Batch Sign-Off</div>
+      </div>
+      <div class="signoff-body">
+        <div class="signoff-avatar" id="pQAInitials"></div>
+        <div class="signoff-details">
+          <div class="signoff-name" id="pQAManagerName"></div>
+          <div class="signoff-title" id="pQAManagerTitle"></div>
+          <div class="signoff-date-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span>Reviewed &amp; approved on <strong id="pQAReviewDate"></strong></span>
+          </div>
+        </div>
+        <div class="signoff-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          <div class="signoff-stamp-text">Approved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CERTIFICATIONS -->
+  <div class="section-card" style="text-align:center; padding: 24px;">
+    <div class="cert-strip">
+      <div class="cert-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        cGMP Compliant
+      </div>
+      <div class="cert-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+        FDA Registered Facility
+      </div>
+      <div class="cert-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>
+        Third-Party Lab Tested
+      </div>
+      <div class="cert-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Full Lot Traceability
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="passport-footer">
+    This Product Passport is generated from independent third-party laboratory analysis.<br>
+    It is provided for transparency purposes only and does not constitute medical advice.<br>
+    These statements have not been evaluated by the Food and Drug Administration.<br><br>
+    <a href="">Secrets Of The Tribe</a> &middot; Colorado, USA &middot; <a href="mailto:support@secrets.shop">support@secrets.shop</a>
+  </div>
+</div>
+
+
+
+<style> h2 {margin-top: 0.75em !important; margin-bottom: 0.5em !important; line-height: 1.3;} button.product-form__submit .badge,button.product-form__submit .save-badge,button.product-form__submit span {border-color: #ffffff !important;} @media screen and (max-width: 639px) {button.product-form__submit span {display: inline-flex; align-items: center; justify-content: center; line-height: 1; }} </style>
+<div id="shopify-block-ARTg3djF4REhDLzg1M__16237003337219470499" class="shopify-block shopify-app-block">
+
+
+
+
+
+
+
+
+
+
+
+</div><div id="shopify-block-AYkpjcWFINkF3RWlJV__1513253815146976218" class="shopify-block shopify-app-block">
+</div><div id="shopify-block-AY3pVa3ZJR0E3aHF6e__10436698916776057164" class="shopify-block shopify-app-block">
+
+<style id="appstle-payment-button-override">
+    .shopify-payment-button {display: none;}
+</style>
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+            
+                
+            
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+</div><div id="shopify-block-Acmtta1dWMEk4VEZsU__4408537085029215131" class="shopify-block shopify-app-block">
+
+</div>
+<script src="/secrets-showcase/local-ui.js" defer></script></body>
+</html>
